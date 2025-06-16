@@ -1,9 +1,16 @@
 import 'package:flutter/material.dart';
 import 'screens/login_screen.dart';
 import 'screens/home/home_screen.dart';
+import 'package:her_rides_user/theme/theme_provider.dart';
+import 'package:provider/provider.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => ThemeProvider(),
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -12,18 +19,69 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Login & Register',
-      theme: ThemeData(
-        primaryColor: const Color(0xFFE91E63),
-        scaffoldBackgroundColor: const Color(0xFFFFF0F5),
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color(0xFFE91E63),
-          primary: const Color(0xFFE91E63),
-          secondary: const Color(0xFFF48FB1),
-        ),
-      ),
-      home: const LoginScreen(),
+    return Consumer<ThemeProvider>(
+      builder: (context, themeProvider, child) {
+        return MaterialApp(
+          title: 'Login & Register',
+          debugShowCheckedModeBanner: false,
+          theme: ThemeData(
+            primaryColor: const Color(0xFFE91E63),
+            scaffoldBackgroundColor: const Color(0xFFFFF0F5),
+            colorScheme: ColorScheme.fromSeed(
+              seedColor: const Color(0xFFE91E63),
+              primary: const Color(0xFFE91E63),
+              secondary: const Color(0xFFF48FB1),
+              brightness: Brightness.light,
+            ),
+            brightness: Brightness.light,
+            visualDensity: VisualDensity.adaptivePlatformDensity,
+            appBarTheme: const AppBarTheme(
+              backgroundColor: Colors.white,
+              iconTheme: IconThemeData(color: Colors.black),
+              titleTextStyle: TextStyle(color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold),
+            ),
+            cardTheme: CardTheme(
+              color: Colors.white,
+              elevation: 0.5,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            ),
+            textTheme: const TextTheme(
+              bodyLarge: TextStyle(color: Colors.black87), // Default text color for light mode
+              bodyMedium: TextStyle(color: Colors.grey), // Default text color for light mode
+              bodySmall: TextStyle(color: Colors.grey), // Default text color for light mode
+            ),
+          ),
+          darkTheme: ThemeData(
+            primaryColor: const Color(0xFFE91E63),
+            scaffoldBackgroundColor: Colors.grey.shade900,
+            colorScheme: ColorScheme.fromSeed(
+              seedColor: const Color(0xFFE91E63),
+              primary: const Color(0xFFE91E63),
+              secondary: const Color(0xFFF48FB1),
+              brightness: Brightness.dark,
+            ),
+            brightness: Brightness.dark,
+            visualDensity: VisualDensity.adaptivePlatformDensity,
+            appBarTheme: AppBarTheme(
+              backgroundColor: Colors.grey.shade900,
+              iconTheme: const IconThemeData(color: Colors.white),
+              titleTextStyle: const TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
+            ),
+            cardTheme: CardTheme(
+              color: Colors.grey.shade800,
+              elevation: 0.5,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            ),
+            textTheme: const TextTheme(
+              bodyLarge: TextStyle(color: Colors.white), // Default text color for dark mode
+              bodyMedium: TextStyle(color: Colors.white70), // Default text color for dark mode
+              bodySmall: TextStyle(color: Colors.white60), // Default text color for dark mode
+            ),
+          ),
+          themeMode: themeProvider.themeMode,
+          home: const LoginScreen(),
+        );
+      },
     );
   }
 }

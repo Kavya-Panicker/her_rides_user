@@ -62,9 +62,9 @@ class AvailableRidesModal extends StatelessWidget {
       expand: false,
       builder: (context, scrollController) {
         return Container(
-          decoration: const BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+          decoration: BoxDecoration(
+            color: Theme.of(context).cardColor,
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
           ),
           child: Column(
             children: [
@@ -73,7 +73,7 @@ class AvailableRidesModal extends StatelessWidget {
                 height: 4,
                 margin: const EdgeInsets.symmetric(vertical: 12),
                 decoration: BoxDecoration(
-                  color: Colors.grey[300],
+                  color: Theme.of(context).dividerColor,
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
@@ -82,12 +82,12 @@ class AvailableRidesModal extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text(
+                    Text(
                       'Choose a trip or swipe up for more',
-                      style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
+                      style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16, color: Theme.of(context).textTheme.bodyLarge?.color),
                     ),
                     IconButton(
-                      icon: const Icon(Icons.close, color: Colors.pink),
+                      icon: Icon(Icons.close, color: Theme.of(context).iconTheme.color),
                       onPressed: () => Navigator.pop(context),
                     ),
                   ],
@@ -103,9 +103,10 @@ class AvailableRidesModal extends StatelessWidget {
                       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(16),
-                        side: BorderSide(color: Colors.pink.shade100, width: 1),
+                        side: BorderSide(color: Theme.of(context).dividerColor),
                       ),
                       elevation: 2,
+                      color: Theme.of(context).cardColor,
                       child: InkWell(
                         onTap: () {
                           Navigator.push(
@@ -120,8 +121,10 @@ class AvailableRidesModal extends StatelessWidget {
                           child: Row(
                             children: [
                               CircleAvatar(
-                                backgroundColor: Colors.pink.shade50,
-                                child: Icon(ride['img'], color: Colors.pink, size: 32),
+                                backgroundColor: Theme.of(context).brightness == Brightness.light
+                                    ? Colors.pink.shade50
+                                    : Colors.grey.shade700,
+                                child: Icon(ride['img'], color: Theme.of(context).colorScheme.primary, size: 32),
                                 radius: 28,
                               ),
                               const SizedBox(width: 16),
@@ -131,12 +134,12 @@ class AvailableRidesModal extends StatelessWidget {
                                   children: [
                                     Text(
                                       ride['brand'],
-                                      style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.pink, fontSize: 16),
+                                      style: TextStyle(fontWeight: FontWeight.bold, color: Theme.of(context).colorScheme.primary, fontSize: 16),
                                     ),
                                     const SizedBox(height: 4),
                                     Text(
                                       ride['desc'],
-                                      style: const TextStyle(fontSize: 13, color: Colors.black87),
+                                      style: TextStyle(fontSize: 13, color: Theme.of(context).textTheme.bodyMedium?.color),
                                     ),
                                     const SizedBox(height: 8),
                                     Wrap(
@@ -146,41 +149,41 @@ class AvailableRidesModal extends StatelessWidget {
                                         Row(
                                           mainAxisSize: MainAxisSize.min,
                                           children: [
-                                            const Icon(Icons.people, size: 16, color: Colors.grey),
+                                            Icon(Icons.people, size: 16, color: Theme.of(context).iconTheme.color),
                                             const SizedBox(width: 4),
-                                            Text('${ride['seats']}'),
+                                            Text('${ride['seats']}', style: TextStyle(color: Theme.of(context).textTheme.bodyMedium?.color)),
                                           ],
                                         ),
                                         Row(
                                           mainAxisSize: MainAxisSize.min,
                                           children: [
-                                            const Icon(Icons.timer, size: 16, color: Colors.grey),
+                                            Icon(Icons.timer, size: 16, color: Theme.of(context).iconTheme.color),
                                             const SizedBox(width: 4),
                                             Text(
                                               ride['eta'],
-                                              style: const TextStyle(fontSize: 12),
+                                              style: TextStyle(fontSize: 12, color: Theme.of(context).textTheme.bodySmall?.color),
                                             ),
                                           ],
                                         ),
                                         Row(
                                           mainAxisSize: MainAxisSize.min,
                                           children: [
-                                            const Icon(Icons.departure_board, size: 16, color: Colors.grey),
+                                            Icon(Icons.departure_board, size: 16, color: Theme.of(context).iconTheme.color),
                                             const SizedBox(width: 4),
                                             Text(
                                               'Arrive: ${ride['arrival_time']}',
-                                              style: const TextStyle(fontSize: 12),
+                                              style: TextStyle(fontSize: 12, color: Theme.of(context).textTheme.bodySmall?.color),
                                             ),
                                           ],
                                         ),
                                         Row(
                                           mainAxisSize: MainAxisSize.min,
                                           children: [
-                                            const Icon(Icons.directions_bike, size: 16, color: Colors.grey),
+                                            Icon(Icons.directions_bike, size: 16, color: Theme.of(context).iconTheme.color),
                                             const SizedBox(width: 4),
                                             Text(
                                               'Drop: ${ride['drop_off_time']}',
-                                              style: const TextStyle(fontSize: 12),
+                                              style: TextStyle(fontSize: 12, color: Theme.of(context).textTheme.bodySmall?.color),
                                             ),
                                           ],
                                         ),
@@ -192,8 +195,8 @@ class AvailableRidesModal extends StatelessWidget {
                               const SizedBox(width: 16),
                               Text(
                                 '₹ ${ride['price'].toStringAsFixed(2)}',
-                                style: const TextStyle(
-                                  color: Colors.pink,
+                                style: TextStyle(
+                                  color: Theme.of(context).colorScheme.primary,
                                   fontWeight: FontWeight.bold,
                                   fontSize: 16,
                                 ),

@@ -23,29 +23,25 @@ class ServicesTab extends StatelessWidget {
     ];
 
     return Scaffold(
-      backgroundColor: Colors.white, // Changed background to white
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor, // Use theme's background color
       appBar: AppBar(
-        backgroundColor: Colors.white, // Changed app bar background to white
-        title: const Text(
+        backgroundColor: Theme.of(context).appBarTheme.backgroundColor, // Use theme's app bar background color
+        title: Text(
           'Services',
-          style: TextStyle(
-            color: Colors.black, // Changed title color to black for contrast
-            fontSize: 28,
-            fontWeight: FontWeight.bold,
-          ),
+          style: Theme.of(context).appBarTheme.titleTextStyle, // Use theme's title style
         ),
         elevation: 0,
-        iconTheme: const IconThemeData(color: Colors.black), // Ensure back button/leading icon is visible
+        iconTheme: Theme.of(context).appBarTheme.iconTheme, // Use theme's icon theme
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
+            Text(
               'Go anywhere, get anything',
               style: TextStyle(
-                color: Colors.black87, // Changed subtitle color for contrast
+                color: Theme.of(context).textTheme.bodyLarge?.color, // Use theme's text color
                 fontSize: 18,
                 fontWeight: FontWeight.w500,
               ),
@@ -72,8 +68,9 @@ class ServicesTab extends StatelessWidget {
                     final result = await showModalBottomSheet(
                       context: context,
                       isScrollControlled: true,
-                      shape: const RoundedRectangleBorder(
+                      shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+                        side: BorderSide(color: Theme.of(context).dividerColor), // Use theme's divider color
                       ),
                       builder: (context) => AddressSelectionModal(),
                     );
@@ -81,8 +78,9 @@ class ServicesTab extends StatelessWidget {
                       await showModalBottomSheet(
                         context: context,
                         isScrollControlled: true,
-                        shape: const RoundedRectangleBorder(
+                        shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+                          side: BorderSide(color: Theme.of(context).dividerColor), // Use theme's divider color
                         ),
                         builder: (context) => AvailableRidesModal(
                           from: result['from'],
@@ -95,10 +93,10 @@ class ServicesTab extends StatelessWidget {
               },
             ),
             const SizedBox(height: 40),
-            const Text(
+            Text(
               'Get anything done',
               style: TextStyle(
-                color: Colors.black87, // Changed subtitle color for contrast
+                color: Theme.of(context).textTheme.bodyLarge?.color, // Use theme's text color
                 fontSize: 18,
                 fontWeight: FontWeight.w500,
               ),
@@ -108,13 +106,13 @@ class ServicesTab extends StatelessWidget {
             Container(
               height: 100, // Placeholder height
               decoration: BoxDecoration(
-                color: Colors.grey[200], // Lighter background for consistency with white main background
+                color: Theme.of(context).cardColor, // Use theme's card color
                 borderRadius: BorderRadius.circular(10),
               ),
               alignment: Alignment.center,
-              child: const Text(
+              child: Text(
                 'No delivery services for two-wheelers yet',
-                style: TextStyle(color: Colors.grey), // Darker text for visibility
+                style: TextStyle(color: Theme.of(context).textTheme.bodySmall?.color), // Use theme's text color
               ),
             ),
           ],
@@ -145,7 +143,7 @@ class _ServiceItem extends StatelessWidget {
       onTap: onTap,
       child: Container(
         decoration: BoxDecoration(
-          color: Colors.grey[100], // Lighter background for the card
+          color: Theme.of(context).cardColor, // Use theme's card color
           borderRadius: BorderRadius.circular(10),
         ),
         child: Stack(
@@ -159,18 +157,18 @@ class _ServiceItem extends StatelessWidget {
                     FaIcon(
                       icon,
                       size: 40,
-                      color: Color(0xFFE91E63), // Pink icon for bikes
+                      color: Theme.of(context).colorScheme.primary, // Use theme's primary color
                     ) else
                     Icon(
                       icon,
                       size: 40,
-                      color: Color(0xFFE91E63), // Pink icon for scooters
+                      color: Theme.of(context).colorScheme.primary, // Use theme's primary color
                     ),
                   const SizedBox(height: 8),
                   Text(
                     name,
-                    style: const TextStyle(
-                      color: Colors.black87, // Black text for contrast
+                    style: TextStyle(
+                      color: Theme.of(context).textTheme.bodyLarge?.color, // Use theme's text color
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -184,13 +182,13 @@ class _ServiceItem extends StatelessWidget {
                 child: Container(
                   padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                   decoration: BoxDecoration(
-                    color: const Color(0xFFE91E63), // Pink for promo tag
+                    color: Theme.of(context).colorScheme.primary, // Use theme's primary color for promo tag
                     borderRadius: BorderRadius.circular(5),
                   ),
-                  child: const Text(
+                  child: Text(
                     'Promo',
                     style: TextStyle(
-                      color: Colors.white, // White text for promo
+                      color: Theme.of(context).colorScheme.onPrimary, // Use theme's onPrimary color for promo text
                       fontSize: 10,
                       fontWeight: FontWeight.bold,
                     ),

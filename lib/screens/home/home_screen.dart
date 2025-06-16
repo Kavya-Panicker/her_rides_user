@@ -34,7 +34,7 @@ class _HomeScreenState extends State<HomeScreen> {
             // Map Placeholder
             Positioned.fill(
               child: Container(
-                color: Colors.white,
+                color: Theme.of(context).colorScheme.surface, // Use theme's surface color
               ),
             ),
             // Top bar
@@ -71,11 +71,13 @@ class _HomeScreenState extends State<HomeScreen> {
               top: 100,
               child: Container(
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: Theme.of(context).cardTheme.color, // Use theme's card color
                   borderRadius: BorderRadius.circular(16),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.pink.withOpacity(0.08),
+                      color: Theme.of(context).brightness == Brightness.light
+                          ? Colors.pink.withOpacity(0.08)
+                          : Colors.black.withOpacity(0.3), // Adjust shadow for dark mode
                       blurRadius: 12,
                       offset: const Offset(0, 4),
                     ),
@@ -86,7 +88,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   children: [
                     Row(
                       children: [
-                        const Icon(Icons.search, color: Colors.grey),
+                        Icon(Icons.search, color: Theme.of(context).iconTheme.color), // Use theme's icon color
                         const SizedBox(width: 8),
                         Expanded(
                           child: GestureDetector(
@@ -113,19 +115,21 @@ class _HomeScreenState extends State<HomeScreen> {
                                 );
                               }
                             },
-                            child: const Text(
+                            child: Text(
                               'Where would you go?',
-                              style: TextStyle(fontSize: 16, color: Colors.grey),
+                              style: TextStyle(fontSize: 16, color: Theme.of(context).textTheme.bodySmall?.color), // Use theme's text color
                             ),
                           ),
                         ),
-                        Icon(Icons.favorite_border, color: Colors.grey[400]),
+                        Icon(Icons.favorite_border, color: Theme.of(context).iconTheme.color), // Use theme's icon color
                       ],
                     ),
                     const SizedBox(height: 12),
                     Container(
                       decoration: BoxDecoration(
-                        color: const Color(0xFFF3E6F6),
+                        color: Theme.of(context).brightness == Brightness.light
+                            ? const Color(0xFFF3E6F6)
+                            : Colors.grey.shade700, // Adjust color for dark mode
                         borderRadius: BorderRadius.circular(10),
                       ),
                       child: Row(
@@ -135,7 +139,9 @@ class _HomeScreenState extends State<HomeScreen> {
                               onTap: () => setState(() => _toggleIndex = 0),
                               child: Container(
                                 decoration: BoxDecoration(
-                                  color: _toggleIndex == 0 ? const Color(0xFFE91E63) : Colors.transparent,
+                                  color: _toggleIndex == 0
+                                      ? Theme.of(context).colorScheme.primary
+                                      : Colors.transparent, // Use theme's primary color
                                   borderRadius: BorderRadius.circular(10),
                                 ),
                                 padding: const EdgeInsets.symmetric(vertical: 10),
@@ -143,7 +149,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                 child: Text(
                                   'Transport',
                                   style: TextStyle(
-                                    color: _toggleIndex == 0 ? Colors.white : Colors.pink,
+                                    color: _toggleIndex == 0
+                                        ? Theme.of(context).colorScheme.onPrimary
+                                        : Theme.of(context).colorScheme.primary, // Use theme's onPrimary/primary color
                                     fontWeight: FontWeight.w600,
                                   ),
                                 ),
@@ -155,7 +163,9 @@ class _HomeScreenState extends State<HomeScreen> {
                               onTap: () => setState(() => _toggleIndex = 1),
                               child: Container(
                                 decoration: BoxDecoration(
-                                  color: _toggleIndex == 1 ? const Color(0xFFE91E63) : Colors.transparent,
+                                  color: _toggleIndex == 1
+                                      ? Theme.of(context).colorScheme.primary
+                                      : Colors.transparent,
                                   borderRadius: BorderRadius.circular(10),
                                 ),
                                 padding: const EdgeInsets.symmetric(vertical: 10),
@@ -163,7 +173,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                 child: Text(
                                   'Delivery',
                                   style: TextStyle(
-                                    color: _toggleIndex == 1 ? Colors.white : Colors.pink,
+                                    color: _toggleIndex == 1
+                                        ? Theme.of(context).colorScheme.onPrimary
+                                        : Theme.of(context).colorScheme.primary,
                                     fontWeight: FontWeight.w600,
                                   ),
                                 ),
@@ -190,9 +202,9 @@ class _HomeScreenState extends State<HomeScreen> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const Text(
+                        Text(
                           'Suggestions',
-                          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black87),
+                          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Theme.of(context).textTheme.bodyLarge?.color), // Use theme's text color
                         ),
                         TextButton(
                           onPressed: () {
@@ -201,9 +213,9 @@ class _HomeScreenState extends State<HomeScreen> {
                               MaterialPageRoute(builder: (context) => const ServicesTab()),
                             );
                           },
-                          child: const Text(
+                          child: Text(
                             'See all',
-                            style: TextStyle(color: Colors.pink, fontSize: 16),
+                            style: TextStyle(color: Theme.of(context).colorScheme.primary, fontSize: 16), // Use theme's primary color
                           ),
                         ),
                       ],
@@ -220,8 +232,9 @@ class _HomeScreenState extends State<HomeScreen> {
                             await showModalBottomSheet(
                               context: context,
                               isScrollControlled: true,
-                              shape: const RoundedRectangleBorder(
+                              shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+                                side: BorderSide(color: Theme.of(context).dividerColor), // Use theme's divider color
                               ),
                               builder: (context) => AddressSelectionModal(),
                             );
@@ -235,8 +248,9 @@ class _HomeScreenState extends State<HomeScreen> {
                             await showModalBottomSheet(
                               context: context,
                               isScrollControlled: true,
-                              shape: const RoundedRectangleBorder(
+                              shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+                                side: BorderSide(color: Theme.of(context).dividerColor), // Use theme's divider color
                               ),
                               builder: (context) => AddressSelectionModal(),
                             );
@@ -262,7 +276,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     Card(
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                       elevation: 4,
-                      color: const Color(0xFFF0E6F6), // Light pink/purple shade
+                      color: Theme.of(context).colorScheme.primary.withOpacity(0.1), // Use theme's primary color with opacity
                       child: Container(
                         width: 300, // Fixed width for each card
                         padding: const EdgeInsets.all(16.0),
@@ -273,13 +287,13 @@ class _HomeScreenState extends State<HomeScreen> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  const Text(
+                                  Text(
                                     'Reserve a ride in',
-                                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black87),
+                                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Theme.of(context).textTheme.bodyLarge?.color), // Use theme's text color
                                   ),
-                                  const Text(
+                                  Text(
                                     'advance',
-                                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black87),
+                                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Theme.of(context).textTheme.bodyLarge?.color), // Use theme's text color
                                   ),
                                   const SizedBox(height: 16),
                                   ElevatedButton(
@@ -287,8 +301,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                       // Request Reserve functionality
                                     },
                                     style: ElevatedButton.styleFrom(
-                                      backgroundColor: Colors.white,
-                                      foregroundColor: Colors.pink,
+                                      backgroundColor: Theme.of(context).colorScheme.surface, // Use theme's surface color
+                                      foregroundColor: Theme.of(context).colorScheme.primary, // Use theme's primary color
                                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                                       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                                     ),
@@ -303,7 +317,9 @@ class _HomeScreenState extends State<HomeScreen> {
                               width: 100,
                               height: 120,
                               decoration: BoxDecoration(
-                                color: Colors.grey.shade200,
+                                color: Theme.of(context).brightness == Brightness.light
+                                    ? Colors.grey.shade200
+                                    : Colors.grey.shade700, // Adjust color for dark mode
                                 borderRadius: BorderRadius.circular(12),
                                 image: const DecorationImage(
                                   image: AssetImage('assets/reserve_ride_placeholder.png'), // Placeholder image
@@ -319,14 +335,14 @@ class _HomeScreenState extends State<HomeScreen> {
                     Card(
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                       elevation: 4,
-                      color: Colors.white, // Another card for potential future use or more content
+                      color: Theme.of(context).cardTheme.color, // Use theme's card color
                       child: Container(
                         width: 300, // Fixed width
                         padding: const EdgeInsets.all(16.0),
                         child: Center(
                           child: Text(
                             'More content here',
-                            style: TextStyle(color: Colors.black54),
+                            style: TextStyle(color: Theme.of(context).textTheme.bodySmall?.color), // Use theme's text color
                           ),
                         ),
                       ),
@@ -363,9 +379,10 @@ class _HomeScreenState extends State<HomeScreen> {
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,
-        selectedItemColor: const Color(0xFFE91E63),
-        unselectedItemColor: Colors.grey,
+        selectedItemColor: Theme.of(context).colorScheme.primary, // Use theme's primary color
+        unselectedItemColor: Theme.of(context).textTheme.bodySmall?.color, // Use theme's text color
         type: BottomNavigationBarType.fixed,
+        backgroundColor: Theme.of(context).cardColor, // Use theme's card color for nav bar background
         items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
@@ -394,11 +411,13 @@ class _DrawerItem extends StatelessWidget {
   final IconData icon;
   final String text;
   final String? subtitle;
+  final VoidCallback? onTap;
 
   const _DrawerItem({
     required this.icon,
     required this.text,
     this.subtitle,
+    this.onTap,
   });
 
   @override
@@ -406,24 +425,21 @@ class _DrawerItem extends StatelessWidget {
     return Column(
       children: [
         ListTile(
-          leading: Icon(icon, color: Colors.pink), // Pink icon
+          leading: Icon(icon, color: Theme.of(context).iconTheme.color), // Use theme's icon color
           title: Text(
             text,
-            style: TextStyle(color: Colors.black, fontSize: 16),
+            style: TextStyle(color: Theme.of(context).textTheme.bodyLarge?.color, fontSize: 16), // Use theme's text color
           ),
           subtitle: subtitle != null
               ? Text(
                   subtitle!,
-                  style: TextStyle(color: Colors.grey[600], fontSize: 12),
+                  style: TextStyle(color: Theme.of(context).textTheme.bodySmall?.color, fontSize: 12), // Use theme's text color
                 )
               : null,
-          trailing: Icon(Icons.arrow_forward_ios, color: Colors.grey, size: 16),
-          onTap: () {
-            // Handle item tap (e.g., navigate to a new page)
-            Navigator.pop(context); // Close the drawer
-          },
+          trailing: Icon(Icons.arrow_forward_ios, color: Theme.of(context).iconTheme.color, size: 16), // Use theme's icon color
+          onTap: onTap, // Use the provided onTap callback
         ),
-        Divider(color: Colors.grey[200], height: 0, indent: 16, endIndent: 16), // Separator line
+        Divider(color: Theme.of(context).dividerColor, height: 0, indent: 16, endIndent: 16), // Use theme's divider color
       ],
     );
   }
@@ -441,7 +457,7 @@ class _CircleButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: Colors.white,
+      color: Theme.of(context).cardColor, // Use theme's card color
       shape: const CircleBorder(),
       elevation: 4,
       child: InkWell(
@@ -449,7 +465,7 @@ class _CircleButton extends StatelessWidget {
         onTap: onTap,
         child: Padding(
           padding: const EdgeInsets.all(8.0),
-          child: Icon(icon, color: Colors.grey[700]),
+          child: Icon(icon, color: Theme.of(context).iconTheme.color), // Use theme's icon color
         ),
       ),
     );
@@ -473,18 +489,20 @@ class _ServiceItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: onTap,
+      onTap: onTap, // Apply the onTap here
       child: Column(
         children: [
           Container(
             width: 60,
             height: 60,
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: Theme.of(context).cardColor, // Use theme's card color
               borderRadius: BorderRadius.circular(12),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.pink.withOpacity(0.05),
+                  color: Theme.of(context).brightness == Brightness.light
+                      ? Colors.pink.withOpacity(0.05)
+                      : Colors.black.withOpacity(0.2), // Adjust shadow for dark mode
                   blurRadius: 8,
                   offset: const Offset(0, 4),
                 ),
@@ -493,7 +511,7 @@ class _ServiceItem extends StatelessWidget {
             child: Stack(
               children: [
                 Center(
-                  child: Icon(icon, size: 30, color: Colors.pink),
+                  child: Icon(icon, size: 30, color: Theme.of(context).colorScheme.primary), // Use theme's primary color
                 ),
                 if (isPromo)
                   Positioned(
@@ -505,9 +523,9 @@ class _ServiceItem extends StatelessWidget {
                         color: Colors.green, // You can adjust this color
                         borderRadius: BorderRadius.circular(8),
                       ),
-                      child: const Text(
+                      child: Text(
                         'Promo',
-                        style: TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold),
+                        style: TextStyle(color: Theme.of(context).colorScheme.onPrimary, fontSize: 10, fontWeight: FontWeight.bold), // Use theme's onPrimary color
                       ),
                     ),
                   ),
@@ -517,7 +535,7 @@ class _ServiceItem extends StatelessWidget {
           const SizedBox(height: 8),
           Text(
             label,
-            style: const TextStyle(fontSize: 14, color: Colors.black87, fontWeight: FontWeight.w500),
+            style: TextStyle(fontSize: 14, color: Theme.of(context).textTheme.bodyLarge?.color, fontWeight: FontWeight.w500), // Use theme's text color
           ),
         ],
       ),

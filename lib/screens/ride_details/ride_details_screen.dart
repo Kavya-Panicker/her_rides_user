@@ -8,12 +8,12 @@ class RideDetailsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios, color: Colors.black),
+          icon: Icon(Icons.arrow_back_ios, color: Theme.of(context).iconTheme.color),
           onPressed: () {
             Navigator.pop(context);
           },
@@ -27,10 +27,10 @@ class RideDetailsScreen extends StatelessWidget {
             children: [
               Text(
                 ride['brand'],
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 28,
                   fontWeight: FontWeight.bold,
-                  color: Colors.black87,
+                  color: Theme.of(context).textTheme.bodyLarge?.color,
                 ),
               ),
               const SizedBox(height: 8),
@@ -38,11 +38,11 @@ class RideDetailsScreen extends StatelessWidget {
                 children: [
                   Icon(Icons.star, color: Colors.amber[600], size: 20),
                   const SizedBox(width: 4),
-                  const Text(
+                  Text(
                     '4.9 (531 reviews)', // Placeholder for reviews
                     style: TextStyle(
                       fontSize: 16,
-                      color: Colors.grey,
+                      color: Theme.of(context).textTheme.bodySmall?.color,
                     ),
                   ),
                 ],
@@ -52,16 +52,16 @@ class RideDetailsScreen extends StatelessWidget {
                 child: Icon(
                   ride['img'],
                   size: 200,
-                  color: Colors.pink,
+                  color: Theme.of(context).colorScheme.primary,
                 ),
               ),
               const SizedBox(height: 24),
-              const Text(
+              Text(
                 'Specifications',
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
-                  color: Colors.black87,
+                  color: Theme.of(context).textTheme.bodyLarge?.color,
                 ),
               ),
               const SizedBox(height: 16),
@@ -91,12 +91,12 @@ class RideDetailsScreen extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 24),
-              const Text(
+              Text(
                 'Vehicle features',
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
-                  color: Colors.black87,
+                  color: Theme.of(context).textTheme.bodyLarge?.color,
                 ),
               ),
               const SizedBox(height: 16),
@@ -116,17 +116,17 @@ class RideDetailsScreen extends StatelessWidget {
                         // Book later logic
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.white,
-                        foregroundColor: Colors.pink,
+                        backgroundColor: Theme.of(context).colorScheme.surface,
+                        foregroundColor: Theme.of(context).colorScheme.primary,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
-                          side: const BorderSide(color: Colors.pink, width: 1.5),
+                          side: BorderSide(color: Theme.of(context).colorScheme.primary, width: 1.5),
                         ),
                         padding: const EdgeInsets.symmetric(vertical: 16),
                       ),
-                      child: const Text(
+                      child: Text(
                         'Book later',
-                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600, color: Theme.of(context).textTheme.bodyLarge?.color),
                       ),
                     ),
                   ),
@@ -137,8 +137,8 @@ class RideDetailsScreen extends StatelessWidget {
                         // Ride Now logic
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.pink,
-                        foregroundColor: Colors.white,
+                        backgroundColor: Theme.of(context).colorScheme.primary,
+                        foregroundColor: Theme.of(context).colorScheme.onPrimary,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),
@@ -146,7 +146,7 @@ class RideDetailsScreen extends StatelessWidget {
                       ),
                       child: const Text(
                         'Ride Now',
-                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600, color: Colors.white),
                       ),
                     ),
                   ),
@@ -175,29 +175,32 @@ class _SpecificationBox extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+
     return Container(
       width: 80,
       height: 80,
       decoration: BoxDecoration(
-        color: Colors.pink.shade50,
+        color: isDarkMode ? Colors.grey.shade800 : Colors.pink.shade50,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.pink.shade100, width: 1),
+        border: Border.all(
+          color: isDarkMode ? Theme.of(context).dividerColor : Colors.pink.shade100, width: 1),
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(icon, color: Colors.pink, size: 24),
+          Icon(icon, color: Theme.of(context).colorScheme.primary, size: 24),
           const SizedBox(height: 4),
           Text(
             label,
-            style: const TextStyle(fontSize: 10, color: Colors.pink),
+            style: TextStyle(fontSize: 10, color: Theme.of(context).textTheme.bodySmall?.color),
           ),
           Text(
             value,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 12,
               fontWeight: FontWeight.bold,
-              color: Colors.pink,
+              color: Theme.of(context).textTheme.bodyMedium?.color,
             ),
           ),
         ],
@@ -218,32 +221,18 @@ class _FeatureTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 12),
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-      decoration: BoxDecoration(
-        color: Colors.pink.shade50,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.pink.shade100, width: 1),
-      ),
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 12.0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
             label,
-            style: const TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w500,
-              color: Colors.pink,
-            ),
+            style: TextStyle(fontSize: 16, color: Theme.of(context).textTheme.bodyLarge?.color),
           ),
           Text(
             value,
-            style: const TextStyle(
-              fontSize: 16,
-              color: Colors.black87,
-              fontWeight: FontWeight.w600,
-            ),
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Theme.of(context).colorScheme.primary),
           ),
         ],
       ),

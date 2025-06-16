@@ -62,10 +62,21 @@ class _ProfileTabState extends State<ProfileTab> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text('Edit $field'),
+          backgroundColor: Theme.of(context).cardColor,
+          title: Text('Edit $field', style: TextStyle(color: Theme.of(context).textTheme.bodyLarge?.color)),
           content: TextField(
             controller: _editController,
-            decoration: InputDecoration(hintText: 'Enter $field'),
+            decoration: InputDecoration(
+              hintText: 'Enter $field',
+              hintStyle: TextStyle(color: Theme.of(context).textTheme.bodySmall?.color),
+              enabledBorder: UnderlineInputBorder(
+                borderSide: BorderSide(color: Theme.of(context).dividerColor),
+              ),
+              focusedBorder: UnderlineInputBorder(
+                borderSide: BorderSide(color: Theme.of(context).colorScheme.primary),
+              ),
+            ),
+            style: TextStyle(color: Theme.of(context).textTheme.bodyLarge?.color),
             autofocus: true,
           ),
           actions: [
@@ -77,11 +88,12 @@ class _ProfileTabState extends State<ProfileTab> {
                   editingField = null;
                 });
               },
-              child: const Text('Cancel'),
+              child: Text('Cancel', style: TextStyle(color: Theme.of(context).colorScheme.primary)),
             ),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFFE91E63),
+                backgroundColor: Theme.of(context).colorScheme.primary,
+                foregroundColor: Theme.of(context).colorScheme.onPrimary,
               ),
               onPressed: () {
                 _saveEdit();
@@ -98,19 +110,19 @@ class _ProfileTabState extends State<ProfileTab> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
         elevation: 0,
-        leading: const Icon(Icons.arrow_back, color: Colors.black),
+        leading: Icon(Icons.arrow_back, color: Theme.of(context).iconTheme.color),
         centerTitle: true,
-        title: const Text(
+        title: Text(
           'Profile',
-          style: TextStyle(color: Colors.black, fontWeight: FontWeight.w600),
+          style: Theme.of(context).appBarTheme.titleTextStyle,
         ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.help_outline, color: Color(0xFFE91E63)),
+            icon: Icon(Icons.help_outline, color: Theme.of(context).colorScheme.primary),
             onPressed: () {},
           ),
         ],
@@ -123,54 +135,75 @@ class _ProfileTabState extends State<ProfileTab> {
             title: 'Name',
             value: name,
             onTap: () => _showEditDialog('Name', name),
+            textColor: Theme.of(context).textTheme.bodyLarge?.color,
+            iconColor: Theme.of(context).iconTheme.color,
+            tileColor: Theme.of(context).cardColor,
           ),
           _ProfileTile(
             icon: Icons.phone_outlined,
             title: 'Phone Number',
             value: phone,
             onTap: () => _showEditDialog('Phone Number', phone),
+            textColor: Theme.of(context).textTheme.bodyLarge?.color,
+            iconColor: Theme.of(context).iconTheme.color,
+            tileColor: Theme.of(context).cardColor,
           ),
           _ProfileTile(
             icon: Icons.email_outlined,
             title: 'Email',
             value: email ?? 'Required',
-            valueColor: email == null ? Colors.deepOrange : Colors.black,
+            valueColor: email == null ? Colors.deepOrange : Theme.of(context).textTheme.bodyLarge?.color,
             requiredField: email == null,
             onTap: () => _showEditDialog('Email', email),
+            textColor: Theme.of(context).textTheme.bodyLarge?.color,
+            iconColor: Theme.of(context).iconTheme.color,
+            tileColor: Theme.of(context).cardColor,
           ),
           _ProfileTile(
             icon: Icons.people_outline,
             title: 'Gender',
             value: gender,
             onTap: () => _showEditDialog('Gender', gender),
+            textColor: Theme.of(context).textTheme.bodyLarge?.color,
+            iconColor: Theme.of(context).iconTheme.color,
+            tileColor: Theme.of(context).cardColor,
           ),
           _ProfileTile(
             icon: Icons.calendar_today_outlined,
             title: 'Date of Birth',
             value: dob ?? 'Required',
-            valueColor: dob == null ? Colors.deepOrange : Colors.black,
+            valueColor: dob == null ? Colors.deepOrange : Theme.of(context).textTheme.bodyLarge?.color,
             requiredField: dob == null,
             onTap: () => _showEditDialog('Date of Birth', dob),
+            textColor: Theme.of(context).textTheme.bodyLarge?.color,
+            iconColor: Theme.of(context).iconTheme.color,
+            tileColor: Theme.of(context).cardColor,
           ),
           _ProfileTile(
             icon: Icons.verified_user_outlined,
             title: 'Member Since',
             value: memberSince,
             enabled: false,
+            textColor: Theme.of(context).textTheme.bodyLarge?.color,
+            iconColor: Theme.of(context).iconTheme.color,
+            tileColor: Theme.of(context).cardColor,
           ),
           _ProfileTile(
             icon: Icons.wb_sunny_outlined,
             title: 'Emergency contact',
             value: emergencyContact ?? 'Required',
-            valueColor: emergencyContact == null ? Colors.deepOrange : Colors.black,
+            valueColor: emergencyContact == null ? Colors.deepOrange : Theme.of(context).textTheme.bodyLarge?.color,
             requiredField: emergencyContact == null,
             trailing: emergencyContact == null
                 ? GestureDetector(
                     onTap: () => _showEditDialog('Emergency Contact', emergencyContact),
-                    child: const Text('Add', style: TextStyle(color: Color(0xFF1976D2), fontWeight: FontWeight.w600)),
+                    child: Text('Add', style: TextStyle(color: Theme.of(context).colorScheme.primary, fontWeight: FontWeight.w600)),
                   )
                 : null,
             onTap: () => _showEditDialog('Emergency Contact', emergencyContact),
+            textColor: Theme.of(context).textTheme.bodyLarge?.color,
+            iconColor: Theme.of(context).iconTheme.color,
+            tileColor: Theme.of(context).cardColor,
           ),
         ],
       ),
@@ -187,6 +220,9 @@ class _ProfileTile extends StatelessWidget {
   final bool enabled;
   final VoidCallback? onTap;
   final Widget? trailing;
+  final Color? textColor;
+  final Color? iconColor;
+  final Color? tileColor;
 
   const _ProfileTile({
     required this.icon,
@@ -197,35 +233,38 @@ class _ProfileTile extends StatelessWidget {
     this.enabled = true,
     this.onTap,
     this.trailing,
+    this.textColor,
+    this.iconColor,
+    this.tileColor,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        ListTile(
-          enabled: enabled,
-          onTap: enabled ? onTap : null,
-          leading: Icon(icon, color: const Color(0xFFE91E63)),
-          title: Text(title, style: const TextStyle(fontWeight: FontWeight.w500)),
-          subtitle: Row(
-            children: [
-              Text(
-                value,
-                style: TextStyle(
-                  color: valueColor ?? Colors.black,
-                  fontWeight: valueColor != null ? FontWeight.w500 : FontWeight.normal,
-                ),
-              ),
-              if (requiredField && value == 'Required')
-                const SizedBox(width: 4),
-              if (trailing != null) trailing!,
-            ],
+    return Card(
+      color: tileColor ?? Theme.of(context).cardColor,
+      elevation: 0,
+      margin: const EdgeInsets.only(bottom: 8),
+      child: ListTile(
+        leading: Icon(icon, color: iconColor ?? Theme.of(context).iconTheme.color),
+        title: Text(
+          title,
+          style: TextStyle(
+            color: textColor ?? Theme.of(context).textTheme.bodyLarge?.color,
+            fontWeight: FontWeight.w500,
           ),
-          trailing: enabled ? const Icon(Icons.chevron_right) : null,
         ),
-        const Divider(height: 1),
-      ],
+        trailing: trailing ??
+            Icon(
+              Icons.arrow_forward_ios,
+              color: Theme.of(context).iconTheme.color,
+              size: 16,
+            ),
+        onTap: enabled ? onTap : null,
+        subtitle: Text(
+          value,
+          style: TextStyle(color: valueColor ?? Theme.of(context).textTheme.bodyMedium?.color),
+        ),
+      ),
     );
   }
 } 
