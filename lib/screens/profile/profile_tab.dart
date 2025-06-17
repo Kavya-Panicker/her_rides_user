@@ -8,7 +8,8 @@ class ProfileTab extends StatefulWidget {
 }
 
 class _ProfileTabState extends State<ProfileTab> {
-  String name = 'Kavya Panicker';
+  String firstName = 'Kavya';
+  String lastName = 'Panicker';
   String phone = '+91 9737611429';
   String? email;
   String gender = 'Female';
@@ -16,48 +17,35 @@ class _ProfileTabState extends State<ProfileTab> {
   String memberSince = 'June 2025';
   String? emergencyContact;
 
-  bool isEditing = false;
-  String? editingField;
-  final TextEditingController _editController = TextEditingController();
+  final TextEditingController _firstNameController = TextEditingController();
+  final TextEditingController _lastNameController = TextEditingController();
+  String? _firstNameErrorText;
 
-  void _startEdit(String field, String? currentValue) {
-    setState(() {
-      editingField = field;
-      isEditing = true;
-      _editController.text = currentValue ?? '';
-    });
+  DateTime? _selectedDate;
+
+  @override
+  void initState() {
+    super.initState();
+    _firstNameController.text = firstName;
+    _lastNameController.text = lastName;
+    if (dob != null) {
+      try {
+        _selectedDate = DateTime.parse(dob!);
+      } catch (e) {
+        _selectedDate = null;
+      }
+    }
   }
 
-  void _saveEdit() {
-    setState(() {
-      switch (editingField) {
-        case 'Name':
-          name = _editController.text;
-          break;
-        case 'Phone Number':
-          phone = _editController.text;
-          break;
-        case 'Email':
-          email = _editController.text;
-          break;
-        case 'Gender':
-          gender = _editController.text;
-          break;
-        case 'Date of Birth':
-          dob = _editController.text;
-          break;
-        case 'Emergency Contact':
-          emergencyContact = _editController.text;
-          break;
-      }
-      isEditing = false;
-      editingField = null;
-      _editController.clear();
-    });
+  @override
+  void dispose() {
+    _firstNameController.dispose();
+    _lastNameController.dispose();
+    super.dispose();
   }
 
   void _showEditDialog(String field, String? currentValue) {
-    _startEdit(field, currentValue);
+    final TextEditingController _tempController = TextEditingController(text: currentValue ?? '');
     showDialog(
       context: context,
       builder: (context) {
@@ -65,7 +53,7 @@ class _ProfileTabState extends State<ProfileTab> {
           backgroundColor: Theme.of(context).cardColor,
           title: Text('Edit $field', style: TextStyle(color: Theme.of(context).textTheme.bodyLarge?.color)),
           content: TextField(
-            controller: _editController,
+            controller: _tempController,
             decoration: InputDecoration(
               hintText: 'Enter $field',
               hintStyle: TextStyle(color: Theme.of(context).textTheme.bodySmall?.color),
@@ -83,10 +71,6 @@ class _ProfileTabState extends State<ProfileTab> {
             TextButton(
               onPressed: () {
                 Navigator.pop(context);
-                setState(() {
-                  isEditing = false;
-                  editingField = null;
-                });
               },
               child: Text('Cancel', style: TextStyle(color: Theme.of(context).colorScheme.primary)),
             ),
@@ -96,12 +80,312 @@ class _ProfileTabState extends State<ProfileTab> {
                 foregroundColor: Theme.of(context).colorScheme.onPrimary,
               ),
               onPressed: () {
-                _saveEdit();
+                setState(() {
+                  switch (field) {
+                    case 'Phone Number':
+                      phone = _tempController.text;
+                      break;
+                    case 'Email':
+                      email = _tempController.text;
+                      break;
+                    case 'Gender':
+                      gender = _tempController.text;
+                      break;
+                    case 'Date of Birth':
+                      dob = _tempController.text;
+                      break;
+                    case 'Emergency Contact':
+                      emergencyContact = _tempController.text;
+                      break;
+                  }
+                });
                 Navigator.pop(context);
               },
               child: const Text('Save Changes'),
             ),
           ],
+        );
+      },
+    );
+  }
+
+  Future<void> _selectDateOfBirth(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: _selectedDate ?? DateTime.now(),
+      firstDate: DateTime(1900),
+      lastDate: DateTime.now(),
+      builder: (BuildContext context, Widget? child) {
+        return Theme(
+          data: Theme.of(context).copyWith(
+            colorScheme: ColorScheme.light(
+              primary: Theme.of(context).colorScheme.primary,
+              onPrimary: Theme.of(context).colorScheme.onPrimary,
+              onSurface: Theme.of(context).textTheme.bodyLarge?.color ?? Colors.black87,
+            ),
+            textButtonTheme: TextButtonThemeData(
+              style: TextButton.styleFrom(
+                foregroundColor: Theme.of(context).colorScheme.primary,
+              ),
+            ),
+          ),
+          child: child!,
+        );
+      },
+    );
+    if (picked != null && picked != _selectedDate) {
+      setState(() {
+        _selectedDate = picked;
+        dob = "${picked.month}/${picked.day}/${picked.year}";
+      });
+    }
+  }
+
+  void _showEditNameModal() {
+    _firstNameController.text = firstName;
+    _lastNameController.text = lastName;
+    _firstNameErrorText = null;
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      ),
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (BuildContext context, StateSetter modalSetState) {
+            return Padding(
+              padding: EdgeInsets.only(
+                bottom: MediaQuery.of(context).viewInsets.bottom,
+              ),
+              child: Container(
+                padding: const EdgeInsets.all(24.0),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).scaffoldBackgroundColor,
+                  borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'Edit Name',
+                          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Theme.of(context).textTheme.bodyLarge?.color),
+                        ),
+                        IconButton(
+                          icon: const Icon(Icons.close, color: Colors.grey),
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 24),
+                    TextField(
+                      controller: _firstNameController,
+                      decoration: InputDecoration(
+                        prefixIcon: Icon(Icons.person_outline, color: Theme.of(context).iconTheme.color),
+                        hintText: 'First Name*',
+                        hintStyle: TextStyle(color: Theme.of(context).textTheme.bodySmall?.color),
+                        errorText: _firstNameErrorText,
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: BorderSide(color: Theme.of(context).dividerColor),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: BorderSide(color: Theme.of(context).dividerColor),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: BorderSide(color: Theme.of(context).colorScheme.primary),
+                        ),
+                      ),
+                      style: TextStyle(color: Theme.of(context).textTheme.bodyLarge?.color),
+                    ),
+                    if (_firstNameErrorText != null)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 8.0, left: 12.0),
+                        child: Text(
+                          _firstNameErrorText!,
+                          style: const TextStyle(color: Colors.red, fontSize: 12),
+                        ),
+                      ),
+                    const SizedBox(height: 16),
+                    TextField(
+                      controller: _lastNameController,
+                      decoration: InputDecoration(
+                        prefixIcon: Icon(Icons.person_outline, color: Theme.of(context).iconTheme.color),
+                        hintText: 'Last Name',
+                        hintStyle: TextStyle(color: Theme.of(context).textTheme.bodySmall?.color),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: BorderSide(color: Theme.of(context).dividerColor),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: BorderSide(color: Theme.of(context).dividerColor),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: BorderSide(color: Theme.of(context).colorScheme.primary),
+                        ),
+                      ),
+                      style: TextStyle(color: Theme.of(context).textTheme.bodyLarge?.color),
+                    ),
+                    const SizedBox(height: 24),
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          modalSetState(() {
+                            if (_firstNameController.text.isEmpty) {
+                              _firstNameErrorText = 'First name cannot be empty';
+                            } else {
+                              _firstNameErrorText = null;
+                            }
+                          });
+
+                          if (_firstNameErrorText == null) {
+                            setState(() {
+                              firstName = _firstNameController.text;
+                              lastName = _lastNameController.text;
+                            });
+                            Navigator.pop(context);
+                          }
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Theme.of(context).colorScheme.primary,
+                          foregroundColor: Theme.of(context).colorScheme.onPrimary,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          padding: const EdgeInsets.symmetric(vertical: 16),
+                        ),
+                        child: const Text(
+                          'Save Changes',
+                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600, color: Colors.white),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
+  void _showEditGenderModal() {
+    String? tempGender = gender;
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      ),
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (BuildContext context, StateSetter modalSetState) {
+            return Padding(
+              padding: EdgeInsets.only(
+                bottom: MediaQuery.of(context).viewInsets.bottom,
+              ),
+              child: Container(
+                padding: const EdgeInsets.all(24.0),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).scaffoldBackgroundColor,
+                  borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'Gender',
+                          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Theme.of(context).textTheme.bodyLarge?.color),
+                        ),
+                        IconButton(
+                          icon: const Icon(Icons.close, color: Colors.grey),
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 16),
+                    RadioListTile<String>(
+                      title: Text('Male', style: TextStyle(color: Theme.of(context).textTheme.bodyLarge?.color)),
+                      value: 'Male',
+                      groupValue: tempGender,
+                      onChanged: (String? value) {
+                        modalSetState(() {
+                          tempGender = value;
+                        });
+                      },
+                      activeColor: Theme.of(context).colorScheme.primary,
+                    ),
+                    RadioListTile<String>(
+                      title: Text('Female', style: TextStyle(color: Theme.of(context).textTheme.bodyLarge?.color)),
+                      value: 'Female',
+                      groupValue: tempGender,
+                      onChanged: (String? value) {
+                        modalSetState(() {
+                          tempGender = value;
+                        });
+                      },
+                      activeColor: Theme.of(context).colorScheme.primary,
+                    ),
+                    RadioListTile<String>(
+                      title: Text('Other', style: TextStyle(color: Theme.of(context).textTheme.bodyLarge?.color)),
+                      value: 'Other',
+                      groupValue: tempGender,
+                      onChanged: (String? value) {
+                        modalSetState(() {
+                          tempGender = value;
+                        });
+                      },
+                      activeColor: Theme.of(context).colorScheme.primary,
+                    ),
+                    const SizedBox(height: 24),
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          setState(() {
+                            gender = tempGender ?? '';
+                          });
+                          Navigator.pop(context);
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Theme.of(context).colorScheme.primary,
+                          foregroundColor: Theme.of(context).colorScheme.onPrimary,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          padding: const EdgeInsets.symmetric(vertical: 16),
+                        ),
+                        child: const Text(
+                          'Save Changes',
+                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600, color: Colors.white),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
         );
       },
     );
@@ -133,8 +417,8 @@ class _ProfileTabState extends State<ProfileTab> {
           _ProfileTile(
             icon: Icons.person_outline,
             title: 'Name',
-            value: name,
-            onTap: () => _showEditDialog('Name', name),
+            value: '$firstName $lastName',
+            onTap: _showEditNameModal,
             textColor: Theme.of(context).textTheme.bodyLarge?.color,
             iconColor: Theme.of(context).iconTheme.color,
             tileColor: Theme.of(context).cardColor,
@@ -163,7 +447,7 @@ class _ProfileTabState extends State<ProfileTab> {
             icon: Icons.people_outline,
             title: 'Gender',
             value: gender,
-            onTap: () => _showEditDialog('Gender', gender),
+            onTap: _showEditGenderModal,
             textColor: Theme.of(context).textTheme.bodyLarge?.color,
             iconColor: Theme.of(context).iconTheme.color,
             tileColor: Theme.of(context).cardColor,
@@ -174,7 +458,7 @@ class _ProfileTabState extends State<ProfileTab> {
             value: dob ?? 'Required',
             valueColor: dob == null ? Colors.deepOrange : Theme.of(context).textTheme.bodyLarge?.color,
             requiredField: dob == null,
-            onTap: () => _showEditDialog('Date of Birth', dob),
+            onTap: () => _selectDateOfBirth(context),
             textColor: Theme.of(context).textTheme.bodyLarge?.color,
             iconColor: Theme.of(context).iconTheme.color,
             tileColor: Theme.of(context).cardColor,

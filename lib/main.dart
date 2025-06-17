@@ -24,60 +24,8 @@ class MyApp extends StatelessWidget {
         return MaterialApp(
           title: 'Login & Register',
           debugShowCheckedModeBanner: false,
-          theme: ThemeData(
-            primaryColor: const Color(0xFFE91E63),
-            scaffoldBackgroundColor: const Color(0xFFFFF0F5),
-            colorScheme: ColorScheme.fromSeed(
-              seedColor: const Color(0xFFE91E63),
-              primary: const Color(0xFFE91E63),
-              secondary: const Color(0xFFF48FB1),
-              brightness: Brightness.light,
-            ),
-            brightness: Brightness.light,
-            visualDensity: VisualDensity.adaptivePlatformDensity,
-            appBarTheme: const AppBarTheme(
-              backgroundColor: Colors.white,
-              iconTheme: IconThemeData(color: Colors.black),
-              titleTextStyle: TextStyle(color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold),
-            ),
-            cardTheme: CardTheme(
-              color: Colors.white,
-              elevation: 0.5,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-            ),
-            textTheme: const TextTheme(
-              bodyLarge: TextStyle(color: Colors.black87), // Default text color for light mode
-              bodyMedium: TextStyle(color: Colors.grey), // Default text color for light mode
-              bodySmall: TextStyle(color: Colors.grey), // Default text color for light mode
-            ),
-          ),
-          darkTheme: ThemeData(
-            primaryColor: const Color(0xFFE91E63),
-            scaffoldBackgroundColor: Colors.grey.shade900,
-            colorScheme: ColorScheme.fromSeed(
-              seedColor: const Color(0xFFE91E63),
-              primary: const Color(0xFFE91E63),
-              secondary: const Color(0xFFF48FB1),
-              brightness: Brightness.dark,
-            ),
-            brightness: Brightness.dark,
-            visualDensity: VisualDensity.adaptivePlatformDensity,
-            appBarTheme: AppBarTheme(
-              backgroundColor: Colors.grey.shade900,
-              iconTheme: const IconThemeData(color: Colors.white),
-              titleTextStyle: const TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
-            ),
-            cardTheme: CardTheme(
-              color: Colors.grey.shade800,
-              elevation: 0.5,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-            ),
-            textTheme: const TextTheme(
-              bodyLarge: TextStyle(color: Colors.white), // Default text color for dark mode
-              bodyMedium: TextStyle(color: Colors.white70), // Default text color for dark mode
-              bodySmall: TextStyle(color: Colors.white60), // Default text color for dark mode
-            ),
-          ),
+          theme: themeProvider.lightTheme,
+          darkTheme: themeProvider.darkTheme,
           themeMode: themeProvider.themeMode,
           home: const LoginScreen(),
         );

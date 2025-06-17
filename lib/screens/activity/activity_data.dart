@@ -24,9 +24,8 @@ final List<Map<String, dynamic>> pastActivities = [
     'price': 90.43,
   },
   {
-    'type': 'map',
-    'from': 'City Center Mall',
-    'to': 'Home Address',
+    'type': 'ride',
+    'destination': 'City Center Mall to Home Address',
     'date': 'May 28',
     'time': '7:30 PM',
     'price': 155.50,

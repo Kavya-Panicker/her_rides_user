@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:her_rides_user/screens/activity/activity_data.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class ActivityScreen extends StatelessWidget {
   const ActivityScreen({super.key});
@@ -49,7 +50,7 @@ class ActivityScreen extends StatelessWidget {
               itemCount: pastActivities.length,
               itemBuilder: (context, index) {
                 final activity = pastActivities[index];
-                if (activity['type'] == 'map') {
+                if (index == 0) { // Always show map for the latest ride (first item)
                   return Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
                     child: Card(
@@ -74,7 +75,7 @@ class ActivityScreen extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  '${activity['from']} & ${activity['to']}',
+                                  activity['type'] == 'map' ? '${activity['from']} & ${activity['to']}' : activity['destination'],
                                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18, color: Theme.of(context).textTheme.bodyLarge?.color),
                                 ),
                                 const SizedBox(height: 4),
@@ -126,7 +127,7 @@ class ActivityScreen extends StatelessWidget {
                       ),
                     ),
                   );
-                } else if (activity['type'] == 'ride') {
+                } else { // Show ride for all other past activities
                   return Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
                     child: Card(
@@ -142,7 +143,13 @@ class ActivityScreen extends StatelessWidget {
                                   ? Colors.pink.shade50
                                   : Colors.grey.shade700,
                               radius: 28,
-                              child: Icon(Icons.directions_car, color: Theme.of(context).colorScheme.primary, size: 32),
+                              child: Icon(
+                                index % 3 == 0 
+                                    ? FontAwesomeIcons.motorcycle 
+                                    : (index % 2 == 0 ? Icons.electric_scooter : Icons.pedal_bike),
+                                color: Theme.of(context).colorScheme.primary,
+                                size: 32,
+                              ),
                             ),
                             const SizedBox(width: 16),
                             Expanded(
